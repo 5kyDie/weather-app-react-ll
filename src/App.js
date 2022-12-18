@@ -1,18 +1,20 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { fetchWeatherData } from "./apis/fetchWeatherData";
 
 function App() {
   const [data, setData] = useState({});
   const [location, setLocation] = useState("");
-
-  const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=metric&lat={lat}&lon={lon}&appid=85147c8030c85790a45b4ef95fd9f101`;
+  const [loading, setLoading] = useState(false);
 
   const searchLocation = (event) => {
     if (event.key === "Enter") {
-      axios.get(url).then((response) => {
-        setData(response.data);
-        console.log(response.data);
-      });
+      setLoading(true);
+      fetchWeatherData(location)
+        .then((response) => {
+          setData(response.data);
+          // console.log(response.data);
+        })
+        .finally(() => setLoading(false));
       setLocation("");
     }
   };
@@ -29,6 +31,7 @@ function App() {
         />
       </div>
       <div className="container">
+        {loading && <div>Loading...</div>}
         <div className="top"></div>
         <div className="location">
           <p>{data.name}</p>
