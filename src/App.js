@@ -12,7 +12,6 @@ function App() {
       fetchWeatherData(location)
         .then((response) => {
           setData(response.data);
-          // console.log(response.data);
         })
         .finally(() => setLoading(false));
       setLocation("");
@@ -31,39 +30,52 @@ function App() {
         />
       </div>
       <div className="container">
-        {loading && <div>Loading...</div>}
-        <div className="top"></div>
-        <div className="location">
-          <p>{data.name}</p>
-        </div>
-        <div className="temp">
-          {data.main ? <h1>{data.main.temp}°</h1> : null}
-        </div>
-        <div className="description">
-          {data.weather ? <p>{data.weather[0].main}</p> : null}
-        </div>
+        {loading && <div style={{ textAlign: "center" }}>Loading...</div>}
 
-        {data.name !== undefined && (
-          <div className="bottom">
-            <div className="feels">
-              {data.main ? (
-                <p className="bold">{data.main.feels_like}°</p>
-              ) : null}
-              <p>Feels Like</p>
-            </div>
-            <div className="humidity">
-              {data.main ? <p className="bold">{data.main.humidity}%</p> : null}
-              <p>Humidity</p>
-            </div>
-            <div className="wind">
-              {data.wind ? <p className="bold">{data.wind.speed} KMH</p> : null}
-              <p>Wind Speed</p>
-            </div>
-          </div>
-        )}
+        <WeatherDetailsTop data={data} />
+
+        <WeatherDetailsBottom data={data} />
       </div>
     </div>
   );
 }
 
 export default App;
+
+const WeatherDetailsTop = ({ data }) => {
+  return (
+    <>
+      <div className="top"></div>
+      <div className="location">
+        <p>{data.name}</p>
+      </div>
+      <div className="temp">
+        {data.main ? <h1>{data.main.temp}°</h1> : null}
+      </div>
+      <div className="description">
+        {data.weather ? <p>{data.weather[0].main}</p> : null}
+      </div>
+    </>
+  );
+};
+
+const WeatherDetailsBottom = ({ data }) => {
+  if (data.name === undefined) return null;
+
+  return (
+    <div className="bottom">
+      <div className="feels">
+        {data.main ? <p className="bold">{data.main.feels_like}°</p> : null}
+        <p>Feels Like</p>
+      </div>
+      <div className="humidity">
+        {data.main ? <p className="bold">{data.main.humidity}%</p> : null}
+        <p>Humidity</p>
+      </div>
+      <div className="wind">
+        {data.wind ? <p className="bold">{data.wind.speed} KMH</p> : null}
+        <p>Wind Speed</p>
+      </div>
+    </div>
+  );
+};
